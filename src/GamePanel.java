@@ -19,17 +19,28 @@ public class GamePanel extends JPanel implements ActionListener {
     double screenWidth = screenSize.getWidth();
     double screenHeight = screenSize.getHeight();
 
-    static final int DELAY = 10;;
+    static final int DELAY = 5;
     Random random;
     public static boolean running = false;
     javax.swing.Timer timer;
 
 
     public static int[] mousePos = new int[2];
+    public static int[] leftClickedLocation = new int[2];
 
     ImageObserver io = (img, infoflags, x, y, width, height) -> {
         return false;
     };
+
+
+    public static boolean leftClicking = false;
+
+
+
+    Tower firstTower = new Tower("src/Images/DeltaImage.png");
+
+
+
 
     private Image tempSkin;
 
@@ -80,8 +91,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running){
 
-            //drawImage(g,io, objSpeed,frames);
-
+            firstTower.drawTower(g, io);
+            //firstTower.sendTelemetry();
         }
     }
 
@@ -125,13 +136,36 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+
     public class MyMouseAdapter extends MouseAdapter{
 
         @Override
         public void mousePressed(MouseEvent e){
             switch (e.getButton()){
                 case MouseEvent.BUTTON1://left click
+                    leftClicking = true;
+                    leftClickedLocation[0] = MouseInfo.getPointerInfo().getLocation().x;
+                    leftClickedLocation[1] = MouseInfo.getPointerInfo().getLocation().y;
 
+                    firstTower.initPos(true);
+                    break;
+                case MouseEvent.BUTTON2://middle click
+
+                    break;
+                case MouseEvent.BUTTON3://right click
+
+                    break;
+                default:
+                    firstTower.initPos(false);
+                    break;
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e){
+            switch (e.getButton()){
+                case MouseEvent.BUTTON1://left click
+                    leftClicking = false;
                     break;
                 case MouseEvent.BUTTON2://middle click
 
