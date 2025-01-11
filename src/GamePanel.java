@@ -4,8 +4,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.ImageObserver;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.Random;
 import java.awt.MouseInfo;
+import java.util.Scanner;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -35,6 +39,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public static boolean leftClicking = false;
 
+    public static int[][] placeableLocations = new int[30][2];
+    public static int[] xWalls = new int[12];
+    public static int[] yWalls = new int[7];
 
 
     Tower firstTower = new Tower("src/Images/DeltaImage.png");
@@ -71,6 +78,8 @@ public class GamePanel extends JPanel implements ActionListener {
             windowWidth = 16 * hRatio;
             windowHeight = 9 * hRatio;
         }
+        windowWidth  -= 50;
+        windowHeight -= 100;
     }
 
     public void startGame(){
@@ -78,7 +87,7 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new javax.swing.Timer(DELAY,this);
         timer.start();
 
-        initImage("src/Images/DeltaImage.png");
+        findPlaceableLocations();
 
     }
 
@@ -92,28 +101,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running){
 
-
+            System.out.println(windowWidth);
 
 
             firstEnemy.drawTower(g, io);
             firstTower.drawTower(g, io);
             //firstTower.sendTelemetry();
+
+            setPlaceableLocations(g);
         }
     }
 
-    private void initImage(String fileName){
-        Image tempIm;
-
-        try{
-            tempIm = ImageIO.read(new File(fileName));
-            tempSkin = tempIm.getScaledInstance(400,400,1);
-        }
-        catch (Exception e){
-            System.out.println("error: " + e);
-        }
-
-
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -177,6 +175,55 @@ public class GamePanel extends JPanel implements ActionListener {
             }
         }
     }
+
+    private void setPlaceableLocations(Graphics g){
+
+        for (int i = 1; i < xWalls.length; i++) {
+            xWalls[i] = (windowWidth/xWalls.length) * i;
+            g.setColor(Color.gray);
+            g.fillRect(xWalls[i], 0, 2, 10000);
+        }
+        for (int i = 1; i < yWalls.length; i++) {
+            yWalls[i] = (windowHeight/yWalls.length) * i;
+            g.setColor(Color.gray);
+            g.fillRect(0, yWalls[i], 10000, 2);
+        }
+
+
+
+
+    }
+
+
+
+
+
+    private void findPlaceableLocations(){
+        FileInputStream inputStream = null;
+
+        try{
+            inputStream = new FileInputStream("src/DataFiles/Map1.txt");
+            Scanner fileReader = new Scanner(inputStream);
+
+            int i = 0;
+            while(fileReader.hasNextInt()){
+                placeableLocations[i][0] = fileReader.nextInt();
+                placeableLocations[i][1] = fileReader.nextInt();
+
+                i++;
+            }
+
+            fileReader.close();
+        }catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+
+
+    }
+
+
+
+
 
 
     private void getMousePos(){
