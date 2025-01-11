@@ -38,6 +38,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     Tower firstTower = new Tower("src/Images/DeltaImage.png");
+    Enemy firstEnemy = new Enemy();
 
 
 
@@ -91,6 +92,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running){
 
+
+
+
+            firstEnemy.drawTower(g, io);
             firstTower.drawTower(g, io);
             //firstTower.sendTelemetry();
         }
