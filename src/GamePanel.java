@@ -147,16 +147,12 @@ public class GamePanel extends JPanel implements ActionListener {
                     leftClickedLocation[0] = MouseInfo.getPointerInfo().getLocation().x;
                     leftClickedLocation[1] = MouseInfo.getPointerInfo().getLocation().y;
 
-                    firstTower.initPos(true);
                     break;
                 case MouseEvent.BUTTON2://middle click
 
                     break;
                 case MouseEvent.BUTTON3://right click
 
-                    break;
-                default:
-                    firstTower.initPos(false);
                     break;
             }
         }

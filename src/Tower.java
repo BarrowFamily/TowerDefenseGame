@@ -5,7 +5,7 @@ import java.io.File;
 
 public class Tower {
 
-    private int width = 300, height = 300, xPos = 0, yPos = 0;
+    private int width = 300, height = 300, xPos = 300, yPos = 300;
     private int initX = 0, initY = 0;
     private Image towerImage;
     private int[] sides = new int[2];
@@ -39,12 +39,24 @@ public class Tower {
 
     public void checkMouseDragging(){
         if (GamePanel.leftClicking) {//is clicking
-            if (GamePanel.mousePos[0] > xPos && GamePanel.mousePos[0] < xPos + width) {//check mouse in x
+            if (init){
+                xPos = GamePanel.mousePos[0] - (GamePanel.leftClickedLocation[0] - initX);
+                yPos = GamePanel.mousePos[1] - (GamePanel.leftClickedLocation[1] - initY);
+            }
+            else if (GamePanel.mousePos[0] > xPos && GamePanel.mousePos[0] < xPos + width) {//check mouse in x
                 if (GamePanel.mousePos[1] > yPos && GamePanel.mousePos[1] < yPos + height) {//check mouse in y
+                    initX = xPos;
+                    initY = yPos;
+
                     xPos = GamePanel.mousePos[0] - (GamePanel.leftClickedLocation[0] - initX);
                     yPos = GamePanel.mousePos[1] - (GamePanel.leftClickedLocation[1] - initY);
+
+                    init = true;
                 }
             }
+        }
+        else{
+            init = false;
         }
     }
 
