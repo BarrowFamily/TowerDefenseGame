@@ -50,10 +50,14 @@ public class Tower {
                 yPos = GamePanel.mousePos[1] - (GamePanel.leftClickedLocation[1] - initY);
 
 
-                for (int i = 0; i < GamePanel.placeableLocations.length; i++) {//shows grey blocks
-                    if (GamePanel.placeableLocations[i][0] != 0){
-                        g.setColor(Color.gray);
-                        g.fillRect(GamePanel.placeableLocations[i][0] - placeableTileIndicatorSize/2, GamePanel.placeableLocations[i][1] - placeableTileIndicatorSize/2, placeableTileIndicatorSize,placeableTileIndicatorSize);
+                for (int i = 0; i < GamePanel.tiles.length-1; i++) {//shows grey blocks
+                    for (int j = 0; j < GamePanel.tiles[0].length-1; j++) {
+
+                        if (GamePanel.tiles[i][j][0] != 0) {
+                            g.setColor(Color.gray);
+                            g.fillRect(GamePanel.tiles[i][j][0] - placeableTileIndicatorSize / 2, GamePanel.tiles[i][j][1] - placeableTileIndicatorSize / 2, placeableTileIndicatorSize, placeableTileIndicatorSize);
+                        }
+
                     }
                 }
 
@@ -74,15 +78,19 @@ public class Tower {
             init = false;
             boolean onTile = false;
 
-            for (int i = 0; i < GamePanel.placeableLocations.length; i++) {//checks if is on a placeable tile
-                if (GamePanel.placeableLocations[i][0] != 0){
-                    if (GamePanel.placeableLocations[i][0] > xPos && GamePanel.placeableLocations[i][0] < xPos + width){
-                        if (GamePanel.placeableLocations[i][1] > yPos && GamePanel.placeableLocations[i][1] < yPos + height){
-                            xPos = GamePanel.placeableLocations[i][0] - width/2;
-                            yPos = GamePanel.placeableLocations[i][1] - height/2;
-                            onTile = true;
+            for (int i = 0; i < GamePanel.tiles.length-1; i++) {//checks if is on a placeable tile
+                for (int j = 0; j < GamePanel.tiles[0].length-1; j++) {
+
+                    if (GamePanel.tiles[i][j][0] != 0) {
+                        if (GamePanel.tiles[i][j][0] > xPos && GamePanel.tiles[i][j][0] < xPos + width) {
+                            if (GamePanel.tiles[i][j][1] > yPos && GamePanel.tiles[i][j][1] < yPos + height) {
+                                xPos = GamePanel.tiles[i][j][0] - width / 2;
+                                yPos = GamePanel.tiles[i][j][1] - height / 2;
+                                onTile = true;
+                            }
                         }
                     }
+
                 }
             }
             if (!onTile){//otherwise goes back to corner

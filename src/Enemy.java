@@ -8,6 +8,7 @@ public class Enemy {
     private int width = 100, height = 100, xPos = 1000, yPos = 500;
     private int hp = 0, def = 0, atk = 0, speed = 0;
     private Image enemyImage;
+    private int location = 0;
 
     Enemy(){
         hp = 10;
@@ -36,6 +37,16 @@ public class Enemy {
         g.drawImage(enemyImage, xPos, yPos, x);
 
     }
+
+
+    private void move(){
+
+
+
+
+    }
+
+
 
 
 }

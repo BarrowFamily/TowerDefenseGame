@@ -1,15 +1,9 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.Random;
 import java.awt.MouseInfo;
-import java.util.Scanner;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -39,9 +33,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public static boolean leftClicking = false;
 
-    public static int[][] placeableLocations = new int[30][2];
-    public static int[] xWalls = new int[12];
-    public static int[] yWalls = new int[7];
+
+    public static int[] xWalls = new int[13];
+    public static int[] yWalls = new int[8];
+    public static int[][][] tiles = new int[yWalls.length][xWalls.length][2];
+
+    public static int[][] path;
 
 
     Tower firstTower = new Tower("src/Images/DeltaImage.png");
@@ -86,8 +83,9 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
         timer = new javax.swing.Timer(DELAY,this);
         timer.start();
-
         findPlaceableLocations();
+
+
 
     }
 
@@ -101,14 +99,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running){
 
-            System.out.println(windowWidth);
-
 
             firstEnemy.drawTower(g, io);
             firstTower.drawTower(g, io);
             //firstTower.sendTelemetry();
 
-            setPlaceableLocations(g);
         }
     }
 
@@ -176,52 +171,63 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    private void setPlaceableLocations(Graphics g){
 
-        for (int i = 1; i < xWalls.length; i++) {
-            xWalls[i] = (windowWidth/xWalls.length) * i;
-            g.setColor(Color.gray);
-            g.fillRect(xWalls[i], 0, 2, 10000);
+    private void setPlaceableLocations(){
+
+        for (int i = 1; i < xWalls.length-1; i++) {
+            xWalls[i] = (windowWidth/(xWalls.length-1)) * i;
+            //g.setColor(Color.gray);
+            //g.fillRect(xWalls[i], 0, 2, 10000);
         }
-        for (int i = 1; i < yWalls.length; i++) {
-            yWalls[i] = (windowHeight/yWalls.length) * i;
-            g.setColor(Color.gray);
-            g.fillRect(0, yWalls[i], 10000, 2);
+        xWalls[xWalls.length-1] = windowWidth;
+        for (int i = 1; i < yWalls.length-1; i++) {
+            yWalls[i] = (windowHeight/(yWalls.length-1)) * i;
+            //g.setColor(Color.gray);
+            //g.fillRect(0, yWalls[i], 10000, 2);
         }
-
-
-
+        yWalls[yWalls.length-1] = windowHeight;
 
     }
-
-
 
 
 
     private void findPlaceableLocations(){
-        FileInputStream inputStream = null;
 
-        try{
-            inputStream = new FileInputStream("src/DataFiles/Map1.txt");
-            Scanner fileReader = new Scanner(inputStream);
 
-            int i = 0;
-            while(fileReader.hasNextInt()){
-                placeableLocations[i][0] = fileReader.nextInt();
-                placeableLocations[i][1] = fileReader.nextInt();
+        setPlaceableLocations();
 
-                i++;
+
+        for (int i = 0; i < yWalls.length-2; i++) {
+
+            for (int j = 0; j < xWalls.length-1; j++) {
+                tiles[i][j][1] = (yWalls[i] + yWalls[i + 1])/2;
+                tiles[i][j][0] = (xWalls[j] + xWalls[j + 1])/2;
+
+                //System.out.print(tiles[numOfCycles][0] + ", ");
+                //System.out.println(tiles[numOfCycles][1]);
+
+
             }
-
-            fileReader.close();
-        }catch (Exception e) {
-            System.out.println("Error: " + e);
         }
 
+
+        setPathCorners();
 
     }
 
 
+    private void setPathCorners(){
+
+        path = new int[6][2];
+
+        path[0][0] = tiles[0][12][0]; path[0][1] = tiles[0][12][1];
+        path[1][0] = tiles[0][8][0]; path[1][1] = tiles[0][8][1];
+        path[2][0] = tiles[5][8][0]; path[2][1] = tiles[5][8][1];
+        path[3][0] = tiles[5][3][0]; path[3][1] = tiles[5][3][1];
+        path[4][0] = tiles[2][3][0]; path[4][1] = tiles[2][3][1];
+        path[5][0] = tiles[2][0][0]; path[5][1] = tiles[2][0][1];
+
+    }
 
 
 
