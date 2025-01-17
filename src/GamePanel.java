@@ -41,8 +41,14 @@ public class GamePanel extends JPanel implements ActionListener {
     public static int[][] path;
 
 
+    private int[] xPathOrigin;
+    private int[] xPathExtent;
+
+    private int[] yPathOrigin;
+    private int[] yPathExtent;
+
     Tower firstTower = new Tower("src/Images/DeltaImage.png");
-    Enemy firstEnemy = new Enemy();
+    Enemy firstEnemy;
 
 
 
@@ -83,8 +89,9 @@ public class GamePanel extends JPanel implements ActionListener {
         running = true;
         timer = new javax.swing.Timer(DELAY,this);
         timer.start();
-        findPlaceableLocations();
 
+        findPlaceableLocations();
+        firstEnemy = new Enemy();
 
 
     }
@@ -203,10 +210,6 @@ public class GamePanel extends JPanel implements ActionListener {
                 tiles[i][j][1] = (yWalls[i] + yWalls[i + 1])/2;
                 tiles[i][j][0] = (xWalls[j] + xWalls[j + 1])/2;
 
-                //System.out.print(tiles[numOfCycles][0] + ", ");
-                //System.out.println(tiles[numOfCycles][1]);
-
-
             }
         }
 
@@ -218,16 +221,60 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void setPathCorners(){
 
-        path = new int[6][2];
+        path = new int[7][2];
 
-        path[0][0] = tiles[0][12][0]; path[0][1] = tiles[0][12][1];
+        path[0][0] = tiles[0][11][0]; path[0][1] = tiles[0][11][1];
         path[1][0] = tiles[0][8][0]; path[1][1] = tiles[0][8][1];
         path[2][0] = tiles[5][8][0]; path[2][1] = tiles[5][8][1];
         path[3][0] = tiles[5][3][0]; path[3][1] = tiles[5][3][1];
         path[4][0] = tiles[2][3][0]; path[4][1] = tiles[2][3][1];
         path[5][0] = tiles[2][0][0]; path[5][1] = tiles[2][0][1];
 
+        //System.out.println(tiles[0][11][0] + ", " + tiles[0][11][1]);
+
     }
+
+    private void drawPath(Graphics g){
+
+        if (xPathExtent != null){
+            initPathToPaint();
+        }
+        else{
+
+        }
+    }
+
+
+    private void initPathToPaint(){
+        xPathOrigin = new int[path.length];
+        xPathExtent = new int[path.length];
+
+        yPathOrigin = new int[path.length];
+        yPathExtent = new int[path.length];
+
+        for (int i = 0; i < path.length-1; i++) {
+            //x
+            if (path[i][0] < path[i+1][0]){//if moving to the right
+                xPathOrigin[i] = path[i][0];
+                xPathExtent[i] = path[i+1][0] - path[i][0];
+            }
+            else{//if moving to the left
+                xPathOrigin[i] = path[i+1][0];
+                xPathExtent[i] = path[i][0] - path[i+1][0];
+            }
+            //y
+            if (path[i][1] < path[i+1][1]){//if moving down
+                yPathOrigin[i] = path[i][1];
+                yPathExtent[i] = path[i+1][1] - path[i][1];
+            }
+            else{//if moving to the left
+                yPathOrigin[i] = path[i+1][1];
+                yPathExtent[i] = path[i][1] - path[i+1][1];
+            }
+        }
+
+    }
+
 
 
 

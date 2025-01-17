@@ -5,8 +5,10 @@ import java.io.File;
 
 public class Enemy {
 
-    private int width = 100, height = 100, xPos = 1000, yPos = 500;
-    private int hp = 0, def = 0, atk = 0, speed = 0;
+    private int width = 100, height = 100;
+    private double xPos = 0, yPos = 0;
+    private int hp = 0, def = 0, atk = 0;
+    private double speed = 0;
     private Image enemyImage;
     private int location = 0;
 
@@ -15,6 +17,10 @@ public class Enemy {
         def = 0;
         atk = 1;
         speed = 1;
+
+        xPos = GamePanel.path[0][0] - (double) width /2;
+        yPos = GamePanel.path[0][1] - (double) height /2;
+
         setImage("src/Images/minecraftCreeper.png");
     }
 
@@ -34,15 +40,26 @@ public class Enemy {
 
     public void drawTower(Graphics g, ImageObserver x){
 
-        g.drawImage(enemyImage, xPos, yPos, x);
+        g.drawImage(enemyImage, (int) xPos, (int) yPos, x);
+        move();
 
     }
 
 
     private void move(){
 
+        double xSign;
+        double ySign;
 
+        if (xPos == GamePanel.path[location+1][0] - (double) width/2  &&  yPos == GamePanel.path[location+1][1] - (double) height/2){
+            location++;
+        }
 
+        xSign = Math.signum(GamePanel.path[location+1][0] - GamePanel.path[location][0]);
+        ySign = Math.signum(GamePanel.path[location+1][1] - GamePanel.path[location][1]);
+
+        xPos += (xSign * speed);
+        yPos += (ySign * speed);
 
     }
 
