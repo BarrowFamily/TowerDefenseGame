@@ -10,8 +10,11 @@ public class GamePanel extends JPanel implements ActionListener {
     static int windowWidth;
     static int windowHeight;
 
-    static final int MIN_Width = 800;
-    static final int MIN_HEIGHT = 450;
+
+    private final int PATH_WIDTH = 25;
+    private final int NUM_TOWERS = 8;
+
+
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     double screenWidth = screenSize.getWidth();
@@ -47,7 +50,12 @@ public class GamePanel extends JPanel implements ActionListener {
     private int[] yPathOrigin;
     private int[] yPathExtent;
 
-    Tower firstTower = new Tower("src/Images/DeltaImage.png");
+    private boolean pathInit = false;
+
+
+    Tower[] towers;
+
+    //Tower firstTower = new Tower("src/Images/DeltaImage.png");
     Enemy firstEnemy;
 
 
@@ -93,6 +101,7 @@ public class GamePanel extends JPanel implements ActionListener {
         findPlaceableLocations();
         firstEnemy = new Enemy();
 
+        initTowers();
 
     }
 
@@ -106,9 +115,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
         if (running){
 
+            drawPath(g);
 
             firstEnemy.drawTower(g, io);
-            firstTower.drawTower(g, io);
+            towers[0].drawTower(g, io);
             //firstTower.sendTelemetry();
 
         }
@@ -236,11 +246,14 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void drawPath(Graphics g){
 
-        if (xPathExtent != null){
+        if (!pathInit){
             initPathToPaint();
+            pathInit = true;
         }
         else{
-
+            for (int i = 0; i < path.length - 2; i++) {
+                g.fillRect(xPathOrigin[i] - PATH_WIDTH/2, yPathOrigin[i] - PATH_WIDTH/2, xPathExtent[i] + PATH_WIDTH, yPathExtent[i] + PATH_WIDTH);
+            }
         }
     }
 
@@ -275,7 +288,20 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
+    private void initTowers(){
+        towers = new Tower[NUM_TOWERS];
 
+        towers[0] = new Tower("src/Images/DeltaImage.png");
+
+
+    }
+
+
+    private void setIdleTowers(){
+
+
+
+    }
 
 
 

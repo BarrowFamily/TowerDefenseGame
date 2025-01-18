@@ -5,12 +5,14 @@ import java.io.File;
 
 public class Tower {
 
-    private int width = 200, height = 200, xPos = 300, yPos = 300;
+    private int width = 200, height = 200, xPos = 0, yPos = 0;
     private int initX = 0, initY = 0;
     private Image towerImage;
     private int[] sides = new int[2];
     private boolean init = false;
     private int placeableTileIndicatorSize = 50;
+
+    private boolean onTile = false;
 
     private int hp = 0, atk = 0, def = 0;
 
@@ -39,11 +41,12 @@ public class Tower {
     public void drawTower(Graphics g, ImageObserver x){
         checkMouseDragging(g);
 
+
         g.drawImage(towerImage, xPos, yPos, x);
 
     }
 
-    public void checkMouseDragging(Graphics g){
+    private void checkMouseDragging(Graphics g){
         if (GamePanel.leftClicking) {//is clicking
             if (init){//while being dragged
                 xPos = GamePanel.mousePos[0] - (GamePanel.leftClickedLocation[0] - initX);
