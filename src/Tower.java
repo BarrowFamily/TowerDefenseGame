@@ -1,3 +1,5 @@
+import jdk.jshell.execution.JdiDefaultExecutionControl;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -23,7 +25,7 @@ public class Tower {
         hp = 10;
         atk = 1;
         def = 0;
-        atkR = 400;
+        atkR = 250;
 
         xPos = GamePanel.windowHeight;
         yPos = GamePanel.windowWidth;
@@ -44,6 +46,7 @@ public class Tower {
 
     public void drawTower(Graphics g, ImageObserver x){
         checkMouseDragging(g);
+        trackEnemies(g);
 
 
         g.drawImage(towerImage, xPos, yPos, x);
@@ -133,20 +136,22 @@ public class Tower {
 
     private void showRange(Graphics g){
         g.setColor(new Color(255,0,0, 52));
-        g.fillOval(xPos - (atkR/2) + (width/2), yPos - (atkR/2) + (height/2), atkR, atkR);
+        g.fillOval(xPos - (atkR) + (width/2), yPos - (atkR) + (height/2), atkR * 2, atkR * 2);
     }
 
-    private void trackEnemies(){
-
-        //if (GamePanel.enemies[0].getPosition()[0] = )
-
+    private void trackEnemies(Graphics g){
+        //tracking if an enemy is in attack range. Uses circle detection, not square and circle
+        if(calcIntercepts(GamePanel.enemies[0])){
+            System.out.println("ATTACK");
+            GamePanel.enemies[0].takeDamage(1, g);
+        }
 
     }
 
-    private void initIntercepts(){
-
-
-
+    private boolean calcIntercepts(Enemy enemy){
+        double distance = Math.sqrt(Math.pow((xPos + ((double) width /2)) - enemy.getPosition()[0],2) + Math.pow((yPos + ((double) height /2)) - enemy.getPosition()[1],2));
+        double radi = atkR + ((double)enemy.getWidth() / 2);
+        return (distance - radi) < 0;
     }
 
 }

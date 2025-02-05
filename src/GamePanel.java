@@ -55,6 +55,8 @@ public class GamePanel extends JPanel implements ActionListener {
     public static Enemy[] enemies;
 
 
+    public int frames = 0;
+    public int seconds = 0;
 
 
 
@@ -110,6 +112,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void draw(Graphics g) {
         getMousePos();
+        frames++;
+        seconds = frames / 60;
 
         if (running){
 
@@ -128,7 +132,6 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         repaint();
-
     }
 
     public class MyKeyAdapter extends KeyAdapter {

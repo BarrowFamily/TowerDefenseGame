@@ -63,8 +63,25 @@ public class Enemy {
 
     }
 
+    /**
+     * @return middle of enemy
+     */
     public double[] getPosition(){
-        return new double[]{xPos,yPos};
+        return new double[]{xPos + ((double) width /2),yPos + ((double) height /2)};
+    }
+
+    public int getWidth(){
+        return width;
+    }
+
+    public int getHeight(){
+        return height;
+    }
+
+    public void takeDamage(int damage, Graphics g){
+        hp -= damage;
+        g.setColor(new Color(255,0,0, 86));
+        g.fillRect((int) xPos,(int) yPos, width, height);
     }
 
 }
