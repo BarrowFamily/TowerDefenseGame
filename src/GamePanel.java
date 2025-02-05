@@ -12,8 +12,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     private final int PATH_WIDTH = 25;
-    private final int NUM_TOWERS = 8;
-
 
 
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -54,9 +52,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     Tower[] towers;
+    public static Enemy[] enemies;
 
-    //Tower firstTower = new Tower("src/Images/DeltaImage.png");
-    Enemy firstEnemy;
 
 
 
@@ -99,7 +96,8 @@ public class GamePanel extends JPanel implements ActionListener {
         timer.start();
 
         findPlaceableLocations();
-        firstEnemy = new Enemy();
+        enemies = new Enemy[1];
+        enemies[0] = createEnemy("Creeper");
 
         initTowers();
 
@@ -117,10 +115,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
             drawPath(g);
 
-            firstEnemy.drawTower(g, io);
-            towers[0].drawTower(g, io);
+            enemies[0].drawTower(g, io);
+            drawTowers(g);
             //firstTower.sendTelemetry();
 
+            setIdleTowers();
         }
     }
 
@@ -206,7 +205,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-
+    private void drawTowers(Graphics g){
+        for (int i = 0; i < towers.length; i++) {
+            towers[i].drawTower(g, io);
+        }
+    }
 
     private void findPlaceableLocations(){
 
@@ -289,25 +292,49 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void initTowers(){
+        int NUM_TOWERS = 8;
         towers = new Tower[NUM_TOWERS];
 
         towers[0] = new Tower("src/Images/DeltaImage.png");
+        towers[1] = new Tower("src/Images/minecraftImage.png");
+        towers[2] = new Tower("src/Images/DeltaImage.png");
+        towers[3] = new Tower("src/Images/DeltaImage.png");
+        towers[4] = new Tower("src/Images/DeltaImage.png");
+        towers[5] = new Tower("src/Images/DeltaImage.png");
+        towers[6] = new Tower("src/Images/DeltaImage.png");
+        towers[7] = new Tower("src/Images/DeltaImage.png");
 
 
     }
-
 
     private void setIdleTowers(){
-
+        int towerPos = 0;
+        for (int i = 0; i < towers.length; i++) {
+            if (!towers[i].getOnTile() && !leftClicking){
+                towers[i].setPos(windowWidth - (towers[i].getWidth()/2) - (towers[i].getWidth() * towerPos), windowHeight - (towers[i].getWidth()/2));
+                towerPos++;
+            }
+        }
 
 
     }
-
 
 
     private void getMousePos(){
         mousePos[0] = MouseInfo.getPointerInfo().getLocation().x;
         mousePos[1] = MouseInfo.getPointerInfo().getLocation().y;
+    }
+
+    private Enemy createEnemy(String enemyType){
+        if (enemyType.equals("Creeper")){
+            return new Enemy();
+        }
+
+        return new Enemy();
+    }
+
+    private void initWave(){
+
     }
 
 

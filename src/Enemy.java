@@ -63,7 +63,8 @@ public class Enemy {
 
     }
 
-
-
+    public double[] getPosition(){
+        return new double[]{xPos,yPos};
+    }
 
 }

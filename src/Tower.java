@@ -5,7 +5,7 @@ import java.io.File;
 
 public class Tower {
 
-    private int width = 200, height = 200, xPos = 0, yPos = 0;
+    private int width = 150, height = 150, xPos = 0, yPos = 0;
     private int initX = 0, initY = 0;
     private Image towerImage;
     private int[] sides = new int[2];
@@ -14,15 +14,19 @@ public class Tower {
 
     private boolean onTile = false;
 
-    private int hp = 0, atk = 0, def = 0;
+    private int hp = 0, atk = 0, def = 0, atkR = 0;
 
+
+    private int[] pathIntercepts = new int[2];
 
     Tower(String skin){
         hp = 10;
         atk = 1;
         def = 0;
+        atkR = 400;
 
-
+        xPos = GamePanel.windowHeight;
+        yPos = GamePanel.windowWidth;
         setImage(skin);
     }
 
@@ -63,6 +67,7 @@ public class Tower {
 
                     }
                 }
+                showRange(g);
 
             }//ignores the rest of these calculations if still dragging
             else if (GamePanel.leftClickedLocation[0] > xPos && GamePanel.leftClickedLocation[0] < xPos + width) {//check mouse in x
@@ -74,34 +79,33 @@ public class Tower {
                     yPos = GamePanel.mousePos[1] - (GamePanel.leftClickedLocation[1] - initY);
 
                     init = true;
+                    onTile = false;
                 }
             }
         }
         else{//on release of mouse
             init = false;
-            boolean onTile = false;
 
-            for (int i = 0; i < GamePanel.tiles.length-1; i++) {//checks if is on a placeable tile
-                for (int j = 0; j < GamePanel.tiles[0].length-1; j++) {
+            if (!onTile) {
+                for (int i = 0; i < GamePanel.tiles.length - 1; i++) {//checks if is on a placeable tile
+                    for (int j = 0; j < GamePanel.tiles[0].length - 1; j++) {
 
-                    if (GamePanel.tiles[i][j][0] != 0) {
-                        if (GamePanel.tiles[i][j][0] > xPos && GamePanel.tiles[i][j][0] < xPos + width) {
-                            if (GamePanel.tiles[i][j][1] > yPos && GamePanel.tiles[i][j][1] < yPos + height) {
-                                xPos = GamePanel.tiles[i][j][0] - width / 2;
-                                yPos = GamePanel.tiles[i][j][1] - height / 2;
-                                onTile = true;
+                        if (GamePanel.tiles[i][j][0] != 0) {
+                            if (GamePanel.tiles[i][j][0] > xPos && GamePanel.tiles[i][j][0] < xPos + width) {
+                                if (GamePanel.tiles[i][j][1] > yPos && GamePanel.tiles[i][j][1] < yPos + height) {
+                                    xPos = GamePanel.tiles[i][j][0] - width / 2;
+                                    yPos = GamePanel.tiles[i][j][1] - height / 2;
+                                    onTile = true;
+                                }
                             }
                         }
-                    }
 
+                    }
                 }
-            }
-            if (!onTile){//otherwise goes back to corner
-                xPos = GamePanel.windowWidth - width;
-                yPos = GamePanel.windowHeight - height;
             }
         }
     }
+
 
 
     public void sendTelemetry(){
@@ -110,9 +114,39 @@ public class Tower {
 
     }
 
+    public int getWidth(){
+        return width;
+    }
+
+    public boolean getOnTile(){
+        return onTile;
+    }
+
+    /**
+     * @param newX x pos for center of tower
+     * @param newY y pos for center of tower
+     */
+    public void setPos(int newX, int newY){
+        xPos = newX - (width/2);
+        yPos = newY - (height/2);
+    }
+
+    private void showRange(Graphics g){
+        g.setColor(new Color(255,0,0, 52));
+        g.fillOval(xPos - (atkR/2) + (width/2), yPos - (atkR/2) + (height/2), atkR, atkR);
+    }
+
+    private void trackEnemies(){
+
+        //if (GamePanel.enemies[0].getPosition()[0] = )
+
+
+    }
+
+    private void initIntercepts(){
 
 
 
-
+    }
 
 }
