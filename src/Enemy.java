@@ -11,6 +11,8 @@ public class Enemy {
     private double speed = 0;
     private Image enemyImage;
     private int location = 0;
+    private boolean initColor = false;
+    private int colorDelay = 0;
 
     Enemy(){
         hp = 10;
@@ -37,14 +39,13 @@ public class Enemy {
         }
     }
 
-
     public void drawTower(Graphics g, ImageObserver x){
 
         g.drawImage(enemyImage, (int) xPos, (int) yPos, x);
+        paintDamage(g);
         move();
 
     }
-
 
     private void move(){
 
@@ -80,8 +81,19 @@ public class Enemy {
 
     public void takeDamage(int damage, Graphics g){
         hp -= damage;
-        g.setColor(new Color(255,0,0, 86));
-        g.fillRect((int) xPos,(int) yPos, width, height);
+        initColor = true;
+    }
+
+    public void paintDamage(Graphics g){
+        if (initColor){
+            colorDelay = GamePanel.frames + 5;
+            initColor = false;
+        }
+        if (colorDelay > GamePanel.frames){
+            g.setColor(new Color(255,0,0, 86));
+            g.fillRect((int) xPos,(int) yPos, width, height);
+        }
+
     }
 
 }

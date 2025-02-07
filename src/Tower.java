@@ -1,5 +1,3 @@
-import jdk.jshell.execution.JdiDefaultExecutionControl;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.ImageObserver;
@@ -16,7 +14,8 @@ public class Tower {
 
     private boolean onTile = false;
 
-    private int hp = 0, atk = 0, def = 0, atkR = 0;
+    private int hp = 0, atk = 0, def = 0, atkR = 0, atkDelay = 0;
+    private int atkInit = 0;
 
 
     private int[] pathIntercepts = new int[2];
@@ -26,6 +25,7 @@ public class Tower {
         atk = 1;
         def = 0;
         atkR = 250;
+        atkDelay = 60;
 
         xPos = GamePanel.windowHeight;
         yPos = GamePanel.windowWidth;
@@ -142,8 +142,17 @@ public class Tower {
     private void trackEnemies(Graphics g){
         //tracking if an enemy is in attack range. Uses circle detection, not square and circle
         if(calcIntercepts(GamePanel.enemies[0])){
+            attackEnemy(g, GamePanel.enemies[0]);
+        }
+    }
+
+    private void attackEnemy(Graphics g, Enemy enemy){
+        if (atkInit < GamePanel.frames){
+            atkInit = GamePanel.frames + atkDelay;
+        }
+        else if (atkInit == GamePanel.frames){
+            enemy.takeDamage(atk, g);
             System.out.println("ATTACK");
-            GamePanel.enemies[0].takeDamage(1, g);
         }
 
     }

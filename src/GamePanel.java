@@ -55,8 +55,8 @@ public class GamePanel extends JPanel implements ActionListener {
     public static Enemy[] enemies;
 
 
-    public int frames = 0;
-    public int seconds = 0;
+    public static int frames = 0;
+    public static int seconds = 0;
 
 
 
@@ -262,7 +262,6 @@ public class GamePanel extends JPanel implements ActionListener {
             }
         }
     }
-
 
     private void initPathToPaint(){
         xPathOrigin = new int[path.length];
