@@ -39,6 +39,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public static int[] yWalls = new int[8];
     public static int[][][] tiles = new int[yWalls.length][xWalls.length][2];
 
+    private static BackgroundTile[] backgroundTiles;
     public static int[][] path;
 
 
@@ -57,7 +58,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public static int frames = 0;
     public static int seconds = 0;
-
 
 
     private Image tempSkin;
@@ -102,6 +102,7 @@ public class GamePanel extends JPanel implements ActionListener {
         enemies[0] = createEnemy("Creeper");
 
         initTowers();
+        initTiles();
 
     }
 
@@ -116,6 +117,7 @@ public class GamePanel extends JPanel implements ActionListener {
         seconds = frames / 60;
 
         if (running){
+            drawBackgroundTiles(g, io);
 
             drawPath(g);
 
@@ -152,7 +154,6 @@ public class GamePanel extends JPanel implements ActionListener {
             }
         }
     }
-
 
     public class MyMouseAdapter extends MouseAdapter{
 
@@ -235,6 +236,42 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
 
+    private void initTiles(){
+        backgroundTiles = new BackgroundTile[tiles.length * tiles[0].length];
+
+        int tileWidth = 155;
+        int tileHeight = 155;
+
+        int x = 0;
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                boolean isPath = false;
+                for (int k = 0; k < path.length; k++) {
+                    if (tiles[i][j][0] == path[k][0] && tiles[i][j][1] == path[k][1]){
+                        isPath = true;
+                    }
+                }
+                if (isPath){
+                    backgroundTiles[x] = new BackgroundTile(tiles[i][j][0] - (tileWidth/2), tiles[i][j][1] - (tileHeight/2), "Path", tileWidth, tileHeight);
+                    x++;
+                }
+                else{
+                    backgroundTiles[x] = new BackgroundTile(tiles[i][j][0] - (tileWidth/2), tiles[i][j][1] - (tileHeight/2), "Grass", tileWidth, tileHeight);
+                    x++;
+                }
+
+            }
+        }
+
+    }
+
+    private void drawBackgroundTiles(Graphics g, ImageObserver x){
+        for (int i = 0; i < backgroundTiles.length; i++) {
+            backgroundTiles[i].drawTile(g, x);
+        }
+    }
+
+
     private void setPathCorners(){
 
         path = new int[7][2];
@@ -292,6 +329,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
 
     }
+
 
     private void initTowers(){
         int NUM_TOWERS = 8;

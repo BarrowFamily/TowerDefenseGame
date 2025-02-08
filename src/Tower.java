@@ -59,17 +59,7 @@ public class Tower {
                 xPos = GamePanel.mousePos[0] - (GamePanel.leftClickedLocation[0] - initX);
                 yPos = GamePanel.mousePos[1] - (GamePanel.leftClickedLocation[1] - initY);
 
-
-                for (int i = 0; i < GamePanel.tiles.length-1; i++) {//shows grey blocks
-                    for (int j = 0; j < GamePanel.tiles[0].length-1; j++) {
-
-                        if (GamePanel.tiles[i][j][0] != 0) {
-                            g.setColor(Color.gray);
-                            g.fillRect(GamePanel.tiles[i][j][0] - placeableTileIndicatorSize / 2, GamePanel.tiles[i][j][1] - placeableTileIndicatorSize / 2, placeableTileIndicatorSize, placeableTileIndicatorSize);
-                        }
-
-                    }
-                }
+                drawGreyBox(g);
                 showRange(g);
 
             }//ignores the rest of these calculations if still dragging
@@ -109,7 +99,18 @@ public class Tower {
         }
     }
 
+    private void drawGreyBox(Graphics g){
+        for (int i = 0; i < GamePanel.tiles.length-1; i++) {//shows grey blocks
+            for (int j = 0; j < GamePanel.tiles[0].length-1; j++) {
 
+                if (GamePanel.tiles[i][j][0] != 0) {
+                    g.setColor(Color.gray);
+                    g.fillRect(GamePanel.tiles[i][j][0] - placeableTileIndicatorSize / 2, GamePanel.tiles[i][j][1] - placeableTileIndicatorSize / 2, placeableTileIndicatorSize, placeableTileIndicatorSize);
+                }
+
+            }
+        }
+    }
 
     public void sendTelemetry(){
         System.out.println("xPos: " + xPos);
@@ -141,7 +142,7 @@ public class Tower {
 
     private void trackEnemies(Graphics g){
         //tracking if an enemy is in attack range. Uses circle detection, not square and circle
-        if(calcIntercepts(GamePanel.enemies[0])){
+        if(calcIntercepts(GamePanel.enemies[0]) && onTile){
             attackEnemy(g, GamePanel.enemies[0]);
         }
     }
