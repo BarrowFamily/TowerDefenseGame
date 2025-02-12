@@ -148,14 +148,10 @@ public class Tower {
     }
 
     private void attackEnemy(Graphics g, Enemy enemy){
-        if (atkInit < GamePanel.frames){
+        if (atkInit <= GamePanel.frames){
+            enemy.takeDamage(atk, g);
             atkInit = GamePanel.frames + atkDelay;
         }
-        else if (atkInit == GamePanel.frames){
-            enemy.takeDamage(atk, g);
-            System.out.println("ATTACK");
-        }
-
     }
 
     private boolean calcIntercepts(Enemy enemy){

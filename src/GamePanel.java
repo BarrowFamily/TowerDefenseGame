@@ -42,6 +42,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private static BackgroundTile[] backgroundTiles;
     public static int[][] path;
 
+    public static int[][] pathForPeople;
+    public static int[][] cornersForPeople;
 
     private int[] xPathOrigin;
     private int[] xPathExtent;
@@ -286,9 +288,29 @@ public class GamePanel extends JPanel implements ActionListener {
         //System.out.println(tiles[0][11][0] + ", " + tiles[0][11][1]);
 
     }
+    /*  0   1   2   3   4   5   6   7   8   9   10  11  12
+    0   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    1   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    2   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    3   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    4   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    5   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+    6   *   *   *   *   *   *   *   *   *   *   *   *   *
+
+     */
+
+    private void setPathBlocks(){
+
+
+    }
 
     private void drawPath(Graphics g){
-
         if (!pathInit){
             initPathToPaint();
             pathInit = true;
@@ -298,6 +320,26 @@ public class GamePanel extends JPanel implements ActionListener {
                 g.fillRect(xPathOrigin[i] - PATH_WIDTH/2, yPathOrigin[i] - PATH_WIDTH/2, xPathExtent[i] + PATH_WIDTH, yPathExtent[i] + PATH_WIDTH);
             }
         }
+    }
+
+    private void cornersForPeopleMaker(){
+
+        cornersForPeople = new int[][] {{3,0}, {3,2},{5,2}, {5,8},{1,8},{1,12}};
+
+    }
+
+    private void makeLineFromCorners(){
+
+        int lengthOfPath = 0;
+
+        for (int i = 0; i < cornersForPeople.length - 1; i++) {
+            lengthOfPath += (cornersForPeople[i][0] - cornersForPeople[i + 1][0]);
+            lengthOfPath += (cornersForPeople[i][1] - cornersForPeople[i + 1][1]);
+        }
+
+        pathForPeople = new int[lengthOfPath][2];
+
+
     }
 
     private void initPathToPaint(){
