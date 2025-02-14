@@ -20,8 +20,8 @@ public class Enemy {
         atk = 1;
         speed = 1;
 
-        xPos = GamePanel.path[0][0] - (double) width /2;
-        yPos = GamePanel.path[0][1] - (double) height /2;
+        xPos =  GamePanel.tiles[GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]][GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]][0] - (double) width /2;
+        yPos = GamePanel.tiles[GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]][GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]][1] - (double) height /2;
 
         setImage("src/Images/minecraftCreeper.png");
     }
@@ -52,12 +52,12 @@ public class Enemy {
         double xSign;
         double ySign;
 
-        if (xPos == GamePanel.path[location+1][0] - (double) width/2  &&  yPos == GamePanel.path[location+1][1] - (double) height/2){
+        if (xPos == GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][0] - (double) width/2  &&  yPos == GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][1] - (double) height/2){
             location++;
         }
 
-        xSign = Math.signum(GamePanel.path[location+1][0] - GamePanel.path[location][0]);
-        ySign = Math.signum(GamePanel.path[location+1][1] - GamePanel.path[location][1]);
+        xSign = Math.signum(GamePanel.tiles[GamePanel.pathForPeople[location][0]][GamePanel.pathForPeople[location][1]][0] - GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][0]);
+        ySign = Math.signum(GamePanel.tiles[GamePanel.pathForPeople[location][0]][GamePanel.pathForPeople[location][1]][1] - GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][1]);
 
         xPos += (xSign * speed);
         yPos += (ySign * speed);

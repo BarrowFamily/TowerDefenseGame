@@ -99,12 +99,21 @@ public class GamePanel extends JPanel implements ActionListener {
         timer = new javax.swing.Timer(DELAY,this);
         timer.start();
 
+        cornersForPeopleMaker();
+        makeLineFromCorners();
         findPlaceableLocations();
+        initTiles();
+        initTowers();
+
+
         enemies = new Enemy[1];
         enemies[0] = createEnemy("Creeper");
 
-        initTowers();
-        initTiles();
+
+
+
+
+
 
     }
 
@@ -121,7 +130,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (running){
             drawBackgroundTiles(g, io);
 
-            drawPath(g);
+            //drawPath(g);
 
             enemies[0].drawTower(g, io);
             drawTowers(g);
@@ -248,8 +257,8 @@ public class GamePanel extends JPanel implements ActionListener {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
                 boolean isPath = false;
-                for (int k = 0; k < path.length; k++) {
-                    if (tiles[i][j][0] == path[k][0] && tiles[i][j][1] == path[k][1]){
+                for (int k = 0; k < pathForPeople.length; k++) {
+                    if (tiles[i][j][0] == tiles[pathForPeople[k][0]][pathForPeople[k][1]][0] && tiles[i][j][1] == tiles[pathForPeople[k][0]][pathForPeople[k][1]][1]){
                         isPath = true;
                     }
                 }
@@ -324,7 +333,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void cornersForPeopleMaker(){
 
-        cornersForPeople = new int[][] {{3,0}, {3,2},{5,2}, {5,8},{1,8},{1,12}};
+        cornersForPeople = new int[][] {{3,0}, {3,2}, {5,2}, {5,8}, {1,8}, {1,12}};
 
     }
 
@@ -333,13 +342,33 @@ public class GamePanel extends JPanel implements ActionListener {
         int lengthOfPath = 0;
 
         for (int i = 0; i < cornersForPeople.length - 1; i++) {
-            lengthOfPath += (cornersForPeople[i][0] - cornersForPeople[i + 1][0]);
-            lengthOfPath += (cornersForPeople[i][1] - cornersForPeople[i + 1][1]);
+            lengthOfPath += Math.abs(cornersForPeople[i][0] - cornersForPeople[i + 1][0]);
+            lengthOfPath += Math.abs(cornersForPeople[i][1] - cornersForPeople[i + 1][1]);
         }
 
         pathForPeople = new int[lengthOfPath][2];
 
+        int xDistance = 0;
+        int yDistance = 0;
 
+        int pathInited = 0;
+
+        for (int i = 0; i < cornersForPeople.length - 1; i++) {
+            xDistance = cornersForPeople[i][0] - cornersForPeople[i + 1][0];
+            yDistance = cornersForPeople[i][1] - cornersForPeople[i + 1][1];
+
+            for (int j = 0; j < Math.abs(xDistance); j++) {
+                pathForPeople[pathInited][0] = cornersForPeople[i][0] - (int)(j * Math.signum(xDistance));
+                pathForPeople[pathInited][1] = cornersForPeople[i][1];
+                pathInited++;
+            }
+            for (int j = 0; j < Math.abs(yDistance); j++) {
+                pathForPeople[pathInited][1] = cornersForPeople[i][1] - (int)(j * Math.signum(yDistance));
+                pathForPeople[pathInited][0] = cornersForPeople[i][0];
+                pathInited++;
+            }
+
+        }
     }
 
     private void initPathToPaint(){
