@@ -18,6 +18,8 @@ public class Tower {
     private int atkInit = 0;
 
 
+    private int tilePos = 0;
+
     private int[] pathIntercepts = new int[2];
 
     Tower(String skin){
@@ -73,6 +75,7 @@ public class Tower {
 
                     init = true;
                     onTile = false;
+                    GamePanel.backgroundTiles[tilePos].setOccupied(false);
                 }
             }
         }
@@ -80,21 +83,26 @@ public class Tower {
             init = false;
 
             if (!onTile) {
-                for (int i = 0; i < GamePanel.tiles.length - 1; i++) {//checks if is on a placeable tile
-                    for (int j = 0; j < GamePanel.tiles[0].length - 1; j++) {
 
-                        if (GamePanel.tiles[i][j][0] != 0) {
-                            if (GamePanel.tiles[i][j][0] > xPos && GamePanel.tiles[i][j][0] < xPos + width) {
-                                if (GamePanel.tiles[i][j][1] > yPos && GamePanel.tiles[i][j][1] < yPos + height) {
-                                    xPos = GamePanel.tiles[i][j][0] - width / 2;
-                                    yPos = GamePanel.tiles[i][j][1] - height / 2;
-                                    onTile = true;
-                                }
-                            }
+                /*
+                checks if a tower can be placed on a tile.
+                also makes sure no other tower is on the tile trying to be placed on.
+                 */
+                for (int i = 0; i < GamePanel.backgroundTiles.length; i++) {
+                    if ((GamePanel.backgroundTiles[i].getPos()[0] > xPos && (GamePanel.backgroundTiles[i].getPos()[0] < xPos + width))
+                    &&  (GamePanel.backgroundTiles[i].getPos()[1] > yPos && (GamePanel.backgroundTiles[i].getPos()[1] < yPos + height))){
+                        if (!GamePanel.backgroundTiles[i].getOccupied()) {
+
+                            xPos = GamePanel.backgroundTiles[i].getPos()[0] - (width / 2);
+                            yPos = GamePanel.backgroundTiles[i].getPos()[1] - (height / 2);
+                            onTile = true;
+
+                            GamePanel.backgroundTiles[i].setOccupied(true);
+                            tilePos = i;
                         }
-
                     }
                 }
+
             }
         }
     }
@@ -142,9 +150,12 @@ public class Tower {
 
     private void trackEnemies(Graphics g){
         //tracking if an enemy is in attack range. Uses circle detection, not square and circle
-        if(calcIntercepts(GamePanel.enemies[0]) && onTile){
-            attackEnemy(g, GamePanel.enemies[0]);
+        for (int i = 0; i < GamePanel.enemies.length; i++) {
+            if(calcIntercepts(GamePanel.enemies[i]) && onTile){
+                attackEnemy(g, GamePanel.enemies[i]);
+            }
         }
+
     }
 
     private void attackEnemy(Graphics g, Enemy enemy){

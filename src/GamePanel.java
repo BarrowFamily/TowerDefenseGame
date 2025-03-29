@@ -37,12 +37,23 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public static int[] xWalls = new int[13];
     public static int[] yWalls = new int[8];
-    public static int[][][] tiles = new int[yWalls.length][xWalls.length][2];
+    public static int[][][] tiles = new int[xWalls.length][yWalls.length][2];
+    /*
+    tiles is a 3D array where the first array contains how many x locations, the second array contains how many y locations, and the final array is the x,y position
+    in pixels on the screen where that tile resides.
+     */
 
-    private static BackgroundTile[] backgroundTiles;
+    public static BackgroundTile[] backgroundTiles;
     public static int[][] path;
+    //currently deprecated
 
     public static int[][] pathForPeople;
+    /*
+    pathForPeople is organized so first array length holds how many tiles are on the path, while second array holds the array location of
+    said tile. For example, if your first array has a length of 35, there are 35 different tiles that should show up as on the path.
+    If pathForPeople[1] contains [3,5], it refers to position [3,5] on the tiles array.
+     */
+
     public static int[][] cornersForPeople;
 
     private int[] xPathOrigin;
@@ -106,8 +117,10 @@ public class GamePanel extends JPanel implements ActionListener {
         initTowers();
 
 
-        enemies = new Enemy[1];
-        enemies[0] = createEnemy("Creeper");
+        enemies = new Enemy[3];
+        enemies[0] = new Enemy();
+        enemies[1] = new Enemy();
+        enemies[2] = new Enemy();
 
 
 
@@ -132,7 +145,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
             //drawPath(g);
 
-            enemies[0].drawTower(g, io);
+            drawEnemies(g);
             drawTowers(g);
             //firstTower.sendTelemetry();
 
@@ -226,23 +239,29 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    private void drawEnemies(Graphics g){
+        for (int i = 0; i < enemies.length; i++) {
+            enemies[i].drawEnemy(g, io);
+        }
+    }
+
     private void findPlaceableLocations(){
 
 
         setPlaceableLocations();
 
 
-        for (int i = 0; i < yWalls.length-2; i++) {
+        for (int i = 0; i < xWalls.length-1; i++) {
 
-            for (int j = 0; j < xWalls.length-1; j++) {
-                tiles[i][j][1] = (yWalls[i] + yWalls[i + 1])/2;
-                tiles[i][j][0] = (xWalls[j] + xWalls[j + 1])/2;
+            for (int j = 0; j < yWalls.length-2; j++) {
+                tiles[i][j][0] = (xWalls[i] + xWalls[i + 1])/2;
+                tiles[i][j][1] = (yWalls[j] + yWalls[j + 1])/2;
 
             }
         }
 
 
-        setPathCorners();
+        //setPathCorners();
 
     }
 
@@ -254,22 +273,27 @@ public class GamePanel extends JPanel implements ActionListener {
         int tileHeight = 155;
 
         int x = 0;
+
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
+
                 boolean isPath = false;
-                for (int k = 0; k < pathForPeople.length; k++) {
-                    if (tiles[i][j][0] == tiles[pathForPeople[k][0]][pathForPeople[k][1]][0] && tiles[i][j][1] == tiles[pathForPeople[k][0]][pathForPeople[k][1]][1]){
+
+                for (int k = 0; k < pathForPeople.length; k++) {//checks every item on pathForPeople if is = to current tile.
+                    if (i == pathForPeople[k][0] && j == pathForPeople[k][1]) {
                         isPath = true;
+                        break;
                     }
                 }
+
                 if (isPath){
                     backgroundTiles[x] = new BackgroundTile(tiles[i][j][0] - (tileWidth/2), tiles[i][j][1] - (tileHeight/2), "Path", tileWidth, tileHeight);
-                    x++;
                 }
                 else{
                     backgroundTiles[x] = new BackgroundTile(tiles[i][j][0] - (tileWidth/2), tiles[i][j][1] - (tileHeight/2), "Grass", tileWidth, tileHeight);
-                    x++;
                 }
+
+                x++;
 
             }
         }
@@ -282,7 +306,7 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-
+    //for old path
     private void setPathCorners(){
 
         path = new int[7][2];
@@ -297,28 +321,26 @@ public class GamePanel extends JPanel implements ActionListener {
         //System.out.println(tiles[0][11][0] + ", " + tiles[0][11][1]);
 
     }
-    /*  0   1   2   3   4   5   6   7   8   9   10  11  12
-    0   *   *   *   *   *   *   *   *   *   *   *   *   *
+    /*  0   1   2   3   4   5   6   7   8   9   10  11 X
+    0   *   *   *   *   *   *   *   *   *   *   *   *
 
-    1   *   *   *   *   *   *   *   *   *   *   *   *   *
+    1   *   *   *   *   *   *   *   *   *   *   *   *
 
-    2   *   *   *   *   *   *   *   *   *   *   *   *   *
+    2   *   *   *   *   *   *   *   *   *   *   *   *
 
-    3   *   *   *   *   *   *   *   *   *   *   *   *   *
+    3   *   *   *   *   *   *   *   *   *   *   *   *
 
-    4   *   *   *   *   *   *   *   *   *   *   *   *   *
+    4   *   *   *   *   *   *   *   *   *   *   *   *
 
-    5   *   *   *   *   *   *   *   *   *   *   *   *   *
+    5   *   *   *   *   *   *   *   *   *   *   *   *
 
-    6   *   *   *   *   *   *   *   *   *   *   *   *   *
+    6   *   *   *   *   *   *   *   *   *   *   *   *
 
+    Y
      */
 
-    private void setPathBlocks(){
 
-
-    }
-
+    //for old path
     private void drawPath(Graphics g){
         if (!pathInit){
             initPathToPaint();
@@ -333,17 +355,18 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void cornersForPeopleMaker(){
 
-        cornersForPeople = new int[][] {{3,0}, {3,2}, {5,2}, {5,8}, {1,8}, {1,12}};
+        cornersForPeople = new int[][] {{0,3}, {2,3}, {2,5}, {8,5}, {8,1}, {11,1}};
 
     }
 
     private void makeLineFromCorners(){
 
-        int lengthOfPath = 0;
+        int lengthOfPath = 1;
 
-        for (int i = 0; i < cornersForPeople.length - 1; i++) {
-            lengthOfPath += Math.abs(cornersForPeople[i][0] - cornersForPeople[i + 1][0]);
-            lengthOfPath += Math.abs(cornersForPeople[i][1] - cornersForPeople[i + 1][1]);
+        for (int i = 0; i < cornersForPeople.length - 1; i++) {//counting how many tiles are being declared by coder to be a path
+            lengthOfPath += Math.abs(cornersForPeople[i + 1][0] - cornersForPeople[i][0]);
+            lengthOfPath += Math.abs(cornersForPeople[i + 1][1] - cornersForPeople[i][1]);
+            //System.out.println(lengthOfPath);
         }
 
         pathForPeople = new int[lengthOfPath][2];
@@ -353,22 +376,49 @@ public class GamePanel extends JPanel implements ActionListener {
 
         int pathInited = 0;
 
-        for (int i = 0; i < cornersForPeople.length - 1; i++) {
-            xDistance = cornersForPeople[i][0] - cornersForPeople[i + 1][0];
-            yDistance = cornersForPeople[i][1] - cornersForPeople[i + 1][1];
+        /*
+         * For each corner coder declares:
+         *      Declare x and y distance = next corner - current corner
+         *      for each tile until reaching next corner:
+         *          add 1 to current location * sign of how far away
+         *
+         */
+        for (int i = 0; i < cornersForPeople.length - 1; i++) {//- 1 needed because + 1 lower
+            xDistance = cornersForPeople[i + 1][0] - cornersForPeople[i][0];
+            yDistance = cornersForPeople[i + 1][1] - cornersForPeople[i][1];
 
-            for (int j = 0; j < Math.abs(xDistance); j++) {
-                pathForPeople[pathInited][0] = cornersForPeople[i][0] - (int)(j * Math.signum(xDistance));
-                pathForPeople[pathInited][1] = cornersForPeople[i][1];
-                pathInited++;
+            if (Math.abs(xDistance) > 0 && Math.abs(yDistance) == 0){
+                for (int j = 0; j < Math.abs(xDistance); j++) {
+                    pathForPeople[pathInited][0] = cornersForPeople[i][0] + (int)(j * Math.signum(xDistance));
+                    pathForPeople[pathInited][1] = cornersForPeople[i][1];
+
+                    //System.out.println("Where we're going: " + cornersForPeople[i + 1][0] + ", " + cornersForPeople[i + 1][1]);
+                    //System.out.println("Where we are: " + pathForPeople[pathInited][0] + ", " + pathForPeople[pathInited][1] + "\n");
+
+                    pathInited++;
+                }
             }
-            for (int j = 0; j < Math.abs(yDistance); j++) {
-                pathForPeople[pathInited][1] = cornersForPeople[i][1] - (int)(j * Math.signum(yDistance));
-                pathForPeople[pathInited][0] = cornersForPeople[i][0];
-                pathInited++;
+            if (Math.abs(yDistance) > 0 && Math.abs(xDistance) == 0) {
+                for (int j = 0; j < Math.abs(yDistance); j++) {
+                    pathForPeople[pathInited][1] = cornersForPeople[i][1] + (int)(j * Math.signum(yDistance));
+                    pathForPeople[pathInited][0] = cornersForPeople[i][0];
+
+                    //System.out.println("Where we're going: " + cornersForPeople[i + 1][0] + ", " + cornersForPeople[i + 1][1]);
+                    //System.out.println("Where we are: " + pathForPeople[pathInited][0] + ", " + pathForPeople[pathInited][1] + "\n");
+
+                    pathInited++;
+                }
             }
 
         }
+        //for some reason the for above does not add final position into array.
+        pathForPeople[pathInited][0] = cornersForPeople[cornersForPeople.length-1][0];
+        pathForPeople[pathInited][1] = cornersForPeople[cornersForPeople.length-1][1];
+
+        //System.out.println("Where we're going: " + cornersForPeople[cornersForPeople.length-1][0] + ", " + cornersForPeople[cornersForPeople.length-1][1]);
+        //System.out.println("Where we are: " + pathForPeople[pathInited][0] + ", " + pathForPeople[pathInited][1] + "\n");
+
+
     }
 
     private void initPathToPaint(){
@@ -436,13 +486,6 @@ public class GamePanel extends JPanel implements ActionListener {
         mousePos[1] = MouseInfo.getPointerInfo().getLocation().y;
     }
 
-    private Enemy createEnemy(String enemyType){
-        if (enemyType.equals("Creeper")){
-            return new Enemy();
-        }
-
-        return new Enemy();
-    }
 
     private void initWave(){
 

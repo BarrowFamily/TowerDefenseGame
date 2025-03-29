@@ -13,15 +13,32 @@ public class Enemy {
     private int location = 0;
     private boolean initColor = false;
     private int colorDelay = 0;
+    private boolean alive = true;
 
     Enemy(){
         hp = 10;
         def = 0;
         atk = 1;
-        speed = 1;
+        speed = 1.5;
 
-        xPos =  GamePanel.tiles[GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]][GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]][0] - (double) width /2;
-        yPos = GamePanel.tiles[GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]][GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]][1] - (double) height /2;
+        xPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [0] - (double) width /2;
+        yPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [1] - (double) height /2;
+
+        location = GamePanel.pathForPeople.length-1;
+
+        setImage("src/Images/minecraftCreeper.png");
+
+    }
+    Enemy(String enemyType){
+        hp = 10;
+        def = 0;
+        atk = 1;
+        speed = 1.5;
+
+        xPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [0] - (double) width /2;
+        yPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [1] - (double) height /2;
+
+        location = GamePanel.pathForPeople.length-1;
 
         setImage("src/Images/minecraftCreeper.png");
     }
@@ -39,12 +56,15 @@ public class Enemy {
         }
     }
 
-    public void drawTower(Graphics g, ImageObserver x){
+    public void drawEnemy(Graphics g, ImageObserver x){
+        if (alive) {
+            g.drawImage(enemyImage, (int) xPos, (int) yPos, x);
+            paintDamage(g);
+            move();
+        }
+        else{
 
-        g.drawImage(enemyImage, (int) xPos, (int) yPos, x);
-        paintDamage(g);
-        move();
-
+        }
     }
 
     private void move(){
@@ -52,15 +72,47 @@ public class Enemy {
         double xSign;
         double ySign;
 
-        if (xPos == GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][0] - (double) width/2  &&  yPos == GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][1] - (double) height/2){
-            location++;
+        int[][][] tempTiles = GamePanel.tiles;
+        int[][] tempPath = GamePanel.pathForPeople;
+
+        int nextPathLocationX = tempPath[location - 1][0];
+        int nextPathLocationY = tempPath[location - 1][1];
+
+
+        //System.out.println("Xpos: " + (tempTiles[nextPathLocationX][nextPathLocationY][0] - (double) width / 2) + ". Current location: " + xPos + " Next location: " + (tempTiles[nextPathLocationX][nextPathLocationY][0] - (double) width / 2));
+        //System.out.println("Ypos: " + (tempTiles[nextPathLocationX][nextPathLocationY][1] - (double) height / 2) + ". Current location: " + yPos);
+        //System.out.println(); //testing movement code
+
+
+        double nextLocationX = tempTiles[nextPathLocationX][nextPathLocationY][0] - (double) width / 2;
+        double nextLocationY = tempTiles[nextPathLocationX][nextPathLocationY][1] - (double) height / 2;
+
+        if ((xPos + (speed/2) + 1> nextLocationX && xPos - (speed/2) - 1 < nextLocationX) && (yPos + (speed/2) + 1 > nextLocationY && yPos - (speed/2) - 1 < nextLocationY)){
+            if (location - 1 > 0) {
+                location--;
+            }
         }
 
-        xSign = Math.signum(GamePanel.tiles[GamePanel.pathForPeople[location][0]][GamePanel.pathForPeople[location][1]][0] - GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][0]);
-        ySign = Math.signum(GamePanel.tiles[GamePanel.pathForPeople[location][0]][GamePanel.pathForPeople[location][1]][1] - GamePanel.tiles[GamePanel.pathForPeople[location+1][0]][GamePanel.pathForPeople[location+1][1]][1]);
+        nextPathLocationX = tempPath[location - 1][0];//must update value after location change
+        nextPathLocationY = tempPath[location - 1][1];
+
+        xSign = Math.signum(tempTiles[nextPathLocationX][nextPathLocationY][0] - ((double) width / 2) - xPos);
+        ySign = Math.signum(tempTiles[nextPathLocationX][nextPathLocationY][1] - ((double) height / 2) - yPos);
+
+
+
+
+
 
         xPos += (xSign * speed);
         yPos += (ySign * speed);
+
+        if (speed > Math.abs(xPos - nextLocationX)){
+            xPos += (xSign * Math.abs(xPos - nextLocationX));
+        }
+        if (speed > Math.abs(yPos - nextLocationY)){
+            yPos += (ySign * Math.abs(yPos - nextLocationY));
+        }
 
     }
 
@@ -82,6 +134,10 @@ public class Enemy {
     public void takeDamage(int damage, Graphics g){
         hp -= damage;
         initColor = true;
+
+        if (hp == 0) {
+            die();
+        }
     }
 
     public void paintDamage(Graphics g){
@@ -93,6 +149,12 @@ public class Enemy {
             g.setColor(new Color(255,0,0, 86));
             g.fillRect((int) xPos,(int) yPos, width, height);
         }
+
+    }
+
+    private void die(){
+        alive = false;
+
 
     }
 

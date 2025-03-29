@@ -6,9 +6,11 @@ import java.util.Objects;
 
 public class BackgroundTile {
 
-    int xPos = 0, yPos = 0;
+    private int xPos = 0, yPos = 0;
     Image tileImage;
-    int width = 100, height = 100;
+    private int width = 100, height = 100;
+    String tileType;
+    private boolean isOccupied = false;
 
 
     BackgroundTile(int xPos, int yPos, String tileState, int width, int height){
@@ -19,9 +21,11 @@ public class BackgroundTile {
 
         if (tileState.equals("Path")){
             setImage("src/Images/Background/Path.PNG");
+            tileType = "Path";
         }
         else if(tileState.equals("Grass")){
             setImage("src/Images/Background/Grass.PNG");
+            tileType = "Grass";
         }
         else{
             setImage("src/Images/Background/Grass.PNG");
@@ -42,4 +46,14 @@ public class BackgroundTile {
             System.out.println("error: " + e);
         }
     }
+
+    /**
+     * @return An array of integers in the middle of tile in form [x,y]
+     */
+    public int[] getPos(){return new int[] {xPos+(width/2),yPos+(height/2)};}
+
+    public void setOccupied(boolean isOccupied){
+        this.isOccupied = isOccupied;
+    }
+    public boolean getOccupied(){return isOccupied;}
 }
