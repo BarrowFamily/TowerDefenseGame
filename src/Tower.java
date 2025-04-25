@@ -22,12 +22,17 @@ public class Tower {
 
     private int[] pathIntercepts = new int[2];
 
+
+    private adaptiveList<Enemy> attackableEnemies;
+
     Tower(String skin){
         hp = 10;
         atk = 1;
         def = 0;
         atkR = 250;
         atkDelay = 60;
+
+        attackableEnemies = new adaptiveList<>();
 
         xPos = GamePanel.windowHeight;
         yPos = GamePanel.windowWidth;
@@ -49,6 +54,7 @@ public class Tower {
     public void drawTower(Graphics g, ImageObserver x){
         checkMouseDragging(g);
         trackEnemies(g);
+        checkRemoveEnemy();
 
 
         g.drawImage(towerImage, xPos, yPos, x);
@@ -148,12 +154,32 @@ public class Tower {
         g.fillOval(xPos - (atkR) + (width/2), yPos - (atkR) + (height/2), atkR * 2, atkR * 2);
     }
 
+    /**
+     * Tracks enemies and adds them to a list if they can be attacked
+     * @param g
+     */
     private void trackEnemies(Graphics g){
-        //tracking if an enemy is in attack range. Uses circle detection, not square and circle
+        //tracking if an enemy is in attack range. Uses double circle detection, not square and circle
         for (int i = 0; i < GamePanel.enemies.length; i++) {
             if(calcIntercepts(GamePanel.enemies[i]) && onTile){
-                attackEnemy(g, GamePanel.enemies[i]);
+
+                if (!attackableEnemies.contains(GamePanel.enemies[i])) {
+                    attackableEnemies.addBack(GamePanel.enemies[i]);
+                }
+
             }
+        }
+    }
+
+    /**
+     * removes enemies from list if no longer can be attacked
+     */
+    private void checkRemoveEnemy(){
+        if (!attackableEnemies.peepFront().alive){
+            attackableEnemies.popFront();
+        }
+        else if(!calcIntercepts(attackableEnemies.peepFront())){
+            attackableEnemies.popFront();
         }
 
     }
@@ -165,6 +191,10 @@ public class Tower {
         }
     }
 
+    /**
+     * @param enemy tower is trying to attack
+     * @return true if input enemy is within attacking range
+     */
     private boolean calcIntercepts(Enemy enemy){
         double distance = Math.sqrt(Math.pow((xPos + ((double) width /2)) - enemy.getPosition()[0],2) + Math.pow((yPos + ((double) height /2)) - enemy.getPosition()[1],2));
         double radi = atkR + ((double)enemy.getWidth() / 2);

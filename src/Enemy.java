@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.io.File;
 
-public class Enemy {
+public class Enemy{
 
     private int width = 100, height = 100;
     private double xPos = 0, yPos = 0;
@@ -13,13 +13,13 @@ public class Enemy {
     private int location = 0;
     private boolean initColor = false;
     private int colorDelay = 0;
-    private boolean alive = true;
+    public boolean alive = true;
 
     Enemy(){
         hp = 10;
         def = 0;
         atk = 1;
-        speed = 1.5;
+        speed = 2;
 
         xPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [0] - (double) width /2;
         yPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [1] - (double) height /2;
@@ -154,8 +154,6 @@ public class Enemy {
 
     private void die(){
         alive = false;
-
-
     }
 
 }
