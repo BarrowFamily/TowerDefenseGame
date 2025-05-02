@@ -53,8 +53,8 @@ public class Tower {
 
     public void drawTower(Graphics g, ImageObserver x){
         checkMouseDragging(g);
-        trackEnemies(g);
-        checkRemoveEnemy();
+
+        tryAttack();
 
 
         g.drawImage(towerImage, xPos, yPos, x);
@@ -154,11 +154,11 @@ public class Tower {
         g.fillOval(xPos - (atkR) + (width/2), yPos - (atkR) + (height/2), atkR * 2, atkR * 2);
     }
 
+
     /**
      * Tracks enemies and adds them to a list if they can be attacked
-     * @param g
      */
-    private void trackEnemies(Graphics g){
+    private void trackEnemies(){
         //tracking if an enemy is in attack range. Uses double circle detection, not square and circle
         for (int i = 0; i < GamePanel.enemies.length; i++) {
             if(calcIntercepts(GamePanel.enemies[i]) && onTile){
@@ -171,22 +171,36 @@ public class Tower {
         }
     }
 
-    /**
-     * removes enemies from list if no longer can be attacked
-     */
-    private void checkRemoveEnemy(){
-        if (!attackableEnemies.peepFront().alive){
-            attackableEnemies.popFront();
-        }
-        else if(!calcIntercepts(attackableEnemies.peepFront())){
-            attackableEnemies.popFront();
+    private void tryAttack(){
+        checkRemoveEnemy();
+        trackEnemies();
+
+        if (attackableEnemies.peepFront() != null){
+            attackEnemy(attackableEnemies.peepFront());
         }
 
     }
 
-    private void attackEnemy(Graphics g, Enemy enemy){
+
+    /**
+     * removes enemies from list if no longer can be attacked
+     */
+    private void checkRemoveEnemy(){
+        if (attackableEnemies.peepFront() != null) {
+
+            if (!attackableEnemies.peepFront().alive) {
+                attackableEnemies.popFront();
+            } else if (!calcIntercepts(attackableEnemies.peepFront())) {
+                attackableEnemies.popFront();
+            }
+
+        }
+
+    }
+
+    private void attackEnemy(Enemy enemy){
         if (atkInit <= GamePanel.frames){
-            enemy.takeDamage(atk, g);
+            enemy.takeDamage(atk);
             atkInit = GamePanel.frames + atkDelay;
         }
     }

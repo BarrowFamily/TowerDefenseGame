@@ -7,8 +7,11 @@ public class Enemy{
 
     private int width = 100, height = 100;
     private double xPos = 0, yPos = 0;
-    private int hp = 0, def = 0, atk = 0;
-    private double speed = 0;
+
+    public int hp = 0, def = 0, atk = 0;
+    public double speed = 0;
+    public String skin;
+
     private Image enemyImage;
     private int location = 0;
     private boolean initColor = false;
@@ -26,6 +29,9 @@ public class Enemy{
 
         location = GamePanel.pathForPeople.length-1;
 
+
+        skin = "src/Images/minecraftCreeper.png";
+
         setImage("src/Images/minecraftCreeper.png");
 
     }
@@ -40,8 +46,33 @@ public class Enemy{
 
         location = GamePanel.pathForPeople.length-1;
 
-        setImage("src/Images/minecraftCreeper.png");
+        skin = enemyType;
+        setImage(enemyType);
     }
+
+    /**
+     *
+     * @param enemyType String link to file containing skin
+     * @param hp amount of hp
+     * @param def def from tower attacks. Damage = atk - def
+     * @param atk amount attacks towers with
+     * @param speed speed enemy moves along track in pixels per frame.
+     */
+    Enemy(String enemyType, int hp, int def, int atk, double speed){
+        this.hp = hp;
+        this.def = def;
+        this.atk = atk;
+        this.speed = speed;
+
+        xPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [0] - (double) width /2;
+        yPos = GamePanel.tiles [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][0]] [GamePanel.pathForPeople[GamePanel.pathForPeople.length-1][1]] [1] - (double) height /2;
+
+        location = GamePanel.pathForPeople.length-1;
+
+        skin = enemyType;
+        setImage(enemyType);
+    }
+
 
 
     private void setImage(String fileName){
@@ -131,7 +162,7 @@ public class Enemy{
         return height;
     }
 
-    public void takeDamage(int damage, Graphics g){
+    public void takeDamage(int damage){
         hp -= damage;
         initColor = true;
 

@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     double screenWidth = screenSize.getWidth();
     double screenHeight = screenSize.getHeight();
 
-    static final int DELAY = 5;
+    static final int DELAY = 10;
     Random random;
     public static boolean running = false;
     javax.swing.Timer timer;
@@ -121,9 +121,6 @@ public class GamePanel extends JPanel implements ActionListener {
         enemies[0] = new Enemy();
         enemies[1] = new Enemy();
         enemies[2] = new Enemy();
-
-
-
 
 
 

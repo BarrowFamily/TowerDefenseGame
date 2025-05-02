@@ -21,21 +21,24 @@ public class adaptiveList <T>{
     }
 
 
+
     public void addBack(T input){
-        if (array.length >= numItems){
+        if (array.length <= numItems){
             expand();
         }
 
         array[numItems] = input;
+        numItems++;
     }
 
 
     public T popFront(){
         T data = (T) array[0];
 
-        if (array.length >= numItems){
+        if (array.length <= numItems){
             expand();
         }
+
 
         Object[] tempArray = new Object[numItems];
         for (int i = 0; i < numItems; i++) {
@@ -46,10 +49,36 @@ public class adaptiveList <T>{
         return data;
     }
 
+    public T popIndex(int i){
+        T data = (T) array[i];
+
+        if (array.length <= numItems){
+            expand();
+        }
+
+
+        Object[] tempArray = new Object[numItems];
+
+        for (int j = 0; j < numItems; j++) {
+            if (j != i) {
+                tempArray[j] = array[j];
+            }
+        }
+
+        array = tempArray;
+
+        return data;
+    }
+
+
+
     public T peepFront(){
         return (T) array[0];
     }
 
+    public T peepIndex(int i){
+        return (T) array[i];
+    }
 
 
     public boolean contains(T data){
@@ -71,5 +100,14 @@ public class adaptiveList <T>{
     }
 
 
+    @Override
+    public String toString() {
+        String returnString = "";
 
+        for (int i = 0; i < numItems; i++) {
+            returnString += i + ", ";
+        }
+
+        return returnString;
+    }
 }
