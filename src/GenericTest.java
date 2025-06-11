@@ -1,10 +1,30 @@
 public class GenericTest {
 
     public static void main(String[] args) {
-        testListRemoveI();
+
+        testGifMaker();
+
+
+        //testListRemoveI();
+
+
+
+        //robot stuff here
     }
 
+
+
+    private static void testGifMaker(){
+
+        GifMaker testGif = new GifMaker("C:\\Users\\josep\\IdeaProjects\\TowerDefenseGame\\src\\Images\\greenslimejump");
+
+        System.out.println(testGif);
+
+    }
+
+
     private static void testListRemoveI(){
+
         adaptiveList<Integer> testArray = new adaptiveList<>();
 
         for (int i = 0; i < 15; i++) {
@@ -13,9 +33,10 @@ public class GenericTest {
         }
         System.out.println();
 
-        System.out.println(testArray.popFront());
+        System.out.println(testArray.popIndex(5));
 
         System.out.println(testArray);
+
     }
 
 

@@ -18,6 +18,15 @@ public class Enemy{
     private int colorDelay = 0;
     public boolean alive = true;
 
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
     Enemy(){
         hp = 10;
         def = 0;

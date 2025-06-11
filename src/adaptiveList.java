@@ -20,6 +20,15 @@ public class adaptiveList <T>{
         numItems = 0;
     }
 
+    /**
+     *
+     * @param array is an array of Objects you can use to init the adaptiveList
+     */
+    public adaptiveList(Object[] array){
+        numItems = array.length;
+        this.array = array;
+    }
+
 
 
     public void addBack(T input){
@@ -33,21 +42,11 @@ public class adaptiveList <T>{
 
 
     public T popFront(){
-        T data = (T) array[0];
 
-        if (array.length <= numItems){
-            expand();
-        }
+        return popIndex(0);
 
-
-        Object[] tempArray = new Object[numItems];
-        for (int i = 0; i < numItems; i++) {
-            tempArray[i] = array[i+1];
-        }
-        array = tempArray;
-
-        return data;
     }
+
 
     public T popIndex(int i){
         T data = (T) array[i];
@@ -59,13 +58,18 @@ public class adaptiveList <T>{
 
         Object[] tempArray = new Object[numItems];
 
-        for (int j = 0; j < numItems; j++) {
+
+        for (int j = 0, k = 0; j < numItems; j++) {
             if (j != i) {
-                tempArray[j] = array[j];
+                tempArray[j - k] = array[j];
+            }
+            else{
+                k = 1;
             }
         }
 
         array = tempArray;
+        numItems--;
 
         return data;
     }
@@ -105,7 +109,7 @@ public class adaptiveList <T>{
         String returnString = "";
 
         for (int i = 0; i < numItems; i++) {
-            returnString += i + ", ";
+            returnString += array[i] + ", ";
         }
 
         return returnString;
