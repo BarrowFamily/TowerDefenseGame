@@ -76,6 +76,9 @@ public class adaptiveList <T>{
 
 
 
+
+
+
     public T peepFront(){
         return (T) array[0];
     }

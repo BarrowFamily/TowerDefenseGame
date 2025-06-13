@@ -5,7 +5,8 @@ public class GifMaker {
 
     public adaptiveList<Image> gifArray;
 
-
+    private File directory;
+    private String[] dirArray;
 
     public GifMaker(String filePathway){
         initGifArray(filePathway);
@@ -13,9 +14,45 @@ public class GifMaker {
     }
 
     private void initGifArray(String filePathway){
-        File directory = new File(filePathway);
+        directory = new File(filePathway);
+        dirArray = directory.list();
+
+
+
         gifArray = new adaptiveList<>(directory.list());
     }
+
+
+    private void sortArray(String stringToCut){
+        int numUntilNum = stringToCut.length();
+
+        String[] tempDirArray = new String[dirArray.length];
+
+        for (int i = 0; i < dirArray.length; i++) {
+
+            String tempFilePath = dirArray[i].substring(numUntilNum);
+
+            int digits = 0;
+            while(true){
+                if(Character.isDigit(tempFilePath.charAt(digits))){
+                    digits++;
+                }
+                else{
+                    break;
+                }
+            }
+
+
+
+
+
+
+        }
+
+
+    }
+
+
 
     @Override
     public String toString(){
